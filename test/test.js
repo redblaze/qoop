@@ -58,7 +58,7 @@ var Cond = qoop.Condition;
     q.select(
         c.all(),
         u.col('user_info').as('user_info'),
-        co.col('title').as('collection_title'),
+        co.col('title').sum().as('collection_title'),
         i.col('asset_info').as('asset_info'),
         i.col('id').as('original_item_id'),
         i.col('clip_count').as('clip_count')
@@ -66,10 +66,15 @@ var Cond = qoop.Condition;
         i
             .join(c).on(i.col('representative_clip_id').is('=', c.col('id')))
             .join(u).on(c.col('user_profile_id').is('=', u.col('id')))
-            .join(co).on(c.col('representative_collection_id').is('=', co.col('id')))
+            .join(co).on(c.col('representative_collection_id').is('=', co.col('id'))),
+        new Query().select(u.all()).from(u).where(u.col('clip_count').is('=', 1)).as('user_test')
     ).where(
         i.col('id').isIn([1,2,3])
-    )
+            .and(i.col('date_created').is('<', new Date()))
+            .and(co.col('clip_count').is('>', i.col('clip_count')))
+    ).group(u.col('id')).having(
+        u.col('collection_count').count().is('>', u.col('clip_count').sum())
+    ).limit(100).offset(200)
     ;
 
     console.log(q.toS());
