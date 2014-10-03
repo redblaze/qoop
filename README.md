@@ -64,24 +64,5 @@ var Table = qoop.Table;
 ## Condition
 * and
 * or
-* normalize
+* not
 
-# Details
-
-### new Query()
-
-Create a query.
-
-__Example__
-```js
-var q = new Query();
-```
-
-### select(column1, column2, ...)
-
-Add columns to the query result.
-
-__Example__
-```js
-q.select(u.col('id'), c.col('content'));
-```
