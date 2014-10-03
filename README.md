@@ -43,3 +43,25 @@ var Table = qoop.Table;
 * rightJoin
 * leftOuterJoin
 * rightOuterJoin
+
+## Join
+* on
+
+## Column
+* as
+* isNull
+* isNotNull
+* isTrue
+* isFalse
+* is
+* isIn
+* count
+* distinct
+* min
+* max
+* sum
+
+## Condition
+* and
+* or
+* normalize
