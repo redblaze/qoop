@@ -6,7 +6,6 @@ var mysql = require('mysql');
 var qoop = require('../lib/qoop');
 var Query = qoop.Query;
 var Table = qoop.Table;
-var Cond = qoop.Condition;
 
 (function() {
 
@@ -22,7 +21,6 @@ var Cond = qoop.Condition;
     var i = new Table('items').as('i');
     i.where(i.col('deleted').isNull());
 
-    var q = new Query();
     /*
      var q = db.format([
      'select c.*, u.user_info as user_info, co.title as collection_title, i.asset_info as asset_info, i.id as original_item_id, i.clip_count as clip_count',
@@ -55,7 +53,7 @@ var Cond = qoop.Condition;
     ;
     */
 
-    q.select(
+    var q = new Query().select(
         c.all(),
         u.col('user_info').as('user_info'),
         co.col('title').sum().as('collection_title'),
