@@ -65,3 +65,7 @@ var Table = qoop.Table;
 * and
 * or
 * normalize
+
+# Details
+
+##
