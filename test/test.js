@@ -52,7 +52,54 @@ var Table = qoop.Table;
     )
     ;
     */
+    var notDelete = function(table) {
+        table.where(
+            table.col('deleted').isNull()
+                .or(table.col('deleted').isFalse())
+        );
+    };
 
+    var s = new Table('students').as('s');
+    notDelete(s);
+
+    var c = new Table('courses').as('c');
+    notDelete(c);
+
+    var r = new Table('registrations').as('r');
+    notDelete(r);
+
+    var q1 = new Query().select(
+            s.all()
+        ).from(
+            s
+                .join(r).on(r.col('student_id').is('=', s.col('id')))
+                .join(c).on(c.col('id').is('=', r.col('course_id')))
+        ).where(
+            c.col('credits').is('>=', 4)
+                .and(s.col('gender').is('=', 'male').not())
+                .and(r.col('date_created').is('<', '2014-10-01'))
+        ).group(s.col('id')).having(
+            c.col('id').count().is('>', 2)
+                .and(c.col('credits').sum().is('<=', 10))
+        ).asc(
+            s.col('last_name')
+        ).desc(
+            s.col('birth_date')
+        ).limit(20).offset(10)
+        ;
+
+    var q2 = new Query().select(
+            s.all()
+        ).from(
+            s
+        ).where(
+            s.col('gender').is('=', 'mail')
+        )
+        ;
+
+    var q = q1.union(q2);
+
+    /*
     var q = new Query().select(
         c.all(),
         u.col('user_info').as('user_info'),
@@ -74,6 +121,7 @@ var Table = qoop.Table;
         u.col('collection_count').count().is('>', u.col('clip_count').sum())
     ).limit(100).offset(200)
     ;
+    */
 
     console.log(q.toS());
 })();
