@@ -61,9 +61,13 @@ var Table = qoop.Table;
 
     var s = new Table('students').as('s');
     notDelete(s);
+    s.where(s.col('birth_date').is('>', new Date(1974, 11, 8)));
 
     var c = new Table('courses').as('c');
     notDelete(c);
+
+    var c2 = new Table('courses').as('c2');
+    notDelete(c2);
 
     var r = new Table('registrations').as('r');
     notDelete(r);
@@ -78,6 +82,7 @@ var Table = qoop.Table;
             c.col('credits').is('>=', 4)
                 .and(s.col('gender').is('=', 'male').not())
                 .and(r.col('date_created').is('<', '2014-10-01'))
+                .and(new Query().select(c2.col('id')).from(c2).where(c2.col('credits').is('>', c.col('credits'))).exists().not())
         ).group(s.col('id')).having(
             c.col('id').count().is('>', 2)
                 .and(c.col('credits').sum().is('<=', 10))
@@ -96,6 +101,7 @@ var Table = qoop.Table;
             s.col('gender').is('=', 'mail')
         )
         ;
+
 
     var q = q1.union(q2);
 
