@@ -21,6 +21,9 @@ var Table = qoop.Table;
     var i = new Table('items').as('i');
     i.where(i.col('deleted').isNull());
 
+    var cv = new Table('collection_votes').as('cv');
+    cv.where(cv.col('deleted').isNull());
+
     /*
      var q = db.format([
      'select c.*, u.user_info as user_info, co.title as collection_title, i.asset_info as asset_info, i.id as original_item_id, i.clip_count as clip_count',
@@ -103,7 +106,18 @@ var Table = qoop.Table;
         ;
 
 
-    var q = q1.union(q2);
+    // var q = q1.union(q2);
+
+
+    var q = new qoop.Query().select(
+        co.all(), cv.col('id').as('cv_id')
+    ).from(
+        co
+            .leftJoin(cv).on(cv.col('collection_id').is('=', co.col('id')).and(cv.col('user_profile_id').is('=', 5)))
+    ).where(
+        co.col('user_profile_id').is('=', 46)
+    );
+
 
     /*
     var q = new Query().select(
